@@ -83,7 +83,144 @@
 // console.log와 console.dir의 차이 
     // 출력하는 자료형이 다름 -> dir 메소드는 문자열 표시 형식으로 콘솔에 출력
     // log 메소드는 파라미터로 전달받은 값을 위주로 출력, dir 메소드는 객체의 속성을 좀 더 자세하게 출력
-    // log 메소드는 여러 값을 쉼표로 구분해서 전달하면 전달받는
+    // log 메소드는 여러 값을 쉼표로 구분해서 전달하면 전달받는 모든 값을 출력, dir 메소드는 여러 값을 전달하더라도 첫 번째 값만 출력 
+
+// Dom 트리 (요소 노드에 대한 이동 프로퍼티) (html4)
+    const myyTag = document.querySelector('#content');
+    cosnsole.log(myyTag); //=> <div id="content">...</div>
+        // Dom 트리의 부모, 자식, 형제 관계를 이용해서 태그 선택
+
+        // 자식 요소 노드
+        console.log(myyTag.children); //=> content의 4개 자식 요소 선택됨 
+        console.log(myyTag.children[1]); //=> <ul id="list-1">...</ul>
+        console.log(myyTag.firstElementChild); // 자식들 중 가장 첫 번째 요소 //=> <h2 id="title-1">Cat-1</h2>
+        console.log(myyTag.lastElementChild); // 자식들 중 가장 마지막 요소 //=> <ul id="list-2">...</ul>
+
+        // 부모 요소 노드
+        console.log(myyTag.parentElement); //=> <body...</body>
+
+        // 형제 요소 노드
+        console.log(myyTag.previousElementSibling); // 이전 형제 //=> null
+        console.log(myyTag.nextElementSibling); // 다음 형제 //=> <script src="index.js"></script>
+
+        console.log(myyTag.parentElement.nextElementSibling); //=> 부모 요소의 형제 요소에 접근
+
+// 모든 노드에 대한 이동 프로퍼티 
+    // 위의 프로퍼티들은 노드 중에서도 요소 노드인 경우에만 존재하는 프로퍼티. 요소 노드가 아닌 다른 노드에 접근하고 싶을 땐 아래와 같은 프로퍼티 활용
+    // node.childNodes / 자식 노드 / 결과 -> node의 자식 노드 모음 (NodeList)
+    // node.firstChild / 자식 노드 / 결과 -> node의 첫 번째 자식 노드 하나
+    // node.lastChild / 자식 노드 / 결과 -> node의 마지막 자식 노드 하나
+    // node.parentNode / 부모 노드 / 결과 -> node의 부모 노드 하나 
+    // node.previousSibiling / 형제 노드 / 결과 -> node의 이전 (previous) 혹은 좌측 (left)에 있는 노드 하나
+    // node.nextSibiling / 형제 노드 / 결과 -> node의 다음 (next) 혹은 우측 (right)에 있는 노드 하나
+
+// 요소 노드 주요 프로퍼티
+    const cloud = document.querySelector('#list-1');
+    // innerHTML
+    console.log(cloud.innerHTML); // 요소 안에 있는 HTML 자체를 문자열로 리턴 (태그와 태그 사이의 줄바꿈이나 들여쓰기같은 것들도 모두 포함됨)
+    cloud.innerHTML = '<li>Exotic</li>'; // 해당 요소가 수정됨 
+    cloud.innerHTML += '<li>Exotic2</li>'; // 기존 HTML의 마지막 부분에 요소 추가
+
+    // outerHTML
+    console.log(cloud.outerHTML); // 해당 요소를 포함한 전체 HTML 코드를 문자열로 리턴 //=> list-1 태그가 그대로 출력 (줄바꿈, 들여쓰기, 띄어쓰기 모두 포함)
+    cloud.outerHTML = '<ul id="new-list"><li>Exotic3</li></ul>'; // 새로운 HTML 코드 할당. 요소 자체가 새로운 요소로 교체됨
+
+    // textContent
+    console.log(cloud.textContent); // 요소 안에 있는 내용들 중 HTML을 제외한 텍스트만 가져옴 
+    cloud.textContent = 'new text'; // 요소 안의 내용 수정. <ul id="list-1">new text</ul>
+    cloud.textContent = '<li>new text</li>'; // 특수문자나 html 코드를 포함하더라도 모두 텍스트로 처리함. <li>new text</li> 모두 텍스트로 취급돼서 적용됨 
+
+// 요소 노드 추가하기 (html5)
+    const first = document.createElement('li'); // 요소 노드 만들기
+    first.textContent = '처음'; // 요소 노드 꾸미기 (textContent, innerHTML ...)
+    tomorrow.prepend(first); // 요소 노드 추가하기 (prepend, append, after, before) // prepend 메소드를 이용하면 메소드를 호출한 노드의 제일 첫 번째 노드로, 파라미터로 전달한 값을 추가할 수 있음 
+    
+    const last = document.createElement('li');
+    last.textContent = '마지막';
+    tomorrow.append(last); // 파라미터로 전달한 값을, 메소드를 호출한 노드의 제일 마지막 자식 노드로
+
+    const prev = document.createElement('p');
+    prev.textContent = '이전';
+    tomorrow.before(prev); // 파라미터로 전달한 값을, 메소드를 호출한 노드의 앞쪽 형제 노드로 추가 
+
+    const next = document.createElement('p');
+    next.textContent = '다음';
+    tomorrow.after(next); // 파라미터로 전달한 값을, 메소드를 호출한 노드의 뒤쪽 형제 노드로 추가 
+
+    tomorrow. before ('문자열', prev); // 문자열도 전달 가능 // 여러 개의 값을 전달하면, 그 순서대로 노드를 한 번에 추가할 수 있음 
+
+// 노드 삭제와 이동
+    const today = document.querySelector('#today');
+    const tomorrow = document.querySelector('#tomorrow');
+
+    // 노드 삭제 
+    tomorrow.remove();
+    today.children[2].remove();
+
+    // 노드 이동 
+    today.append(tomorrow.children[1]); //=> tomorrow의 자식 요소 중에서 1번 인덱스를 today의 제일 마지막에 넣음 
+    tomorrow.children[1].after(today.children[1]); //=> today의 1번 인덱스가 tomorrow의 2번 인덱스로
+    tomorrow.children[2].before(today, children[1]);
+    tomorrow.lastElementChild.before(today.children[1]);
+
+// HTML 속성 다루기 (html6)
+    const tomorrow = document.querySelector('#tomorrow');
+    const item = tomorrow.firstElementChild;
+    const link = item.firstElementChild;
+
+    console.log(tomorrow.getAttribute('href')); // getAttribute('속성') -> 속성에 접근하기 (모든 속성 접근 가능)
+    console.log(item.getAttribute('class'));
+    
+    console.log(tomorrow);
+    console.log(tomorrow.id); // id 속성
+
+    console.log(item);
+    console.log(item.className); // class 속성
+
+    console.log(link);
+    console.log(link.href); // href 속성 
+    console.log(tomorrow.href); //=> undefined
+
+    tomorrow.setAttribute('class', 'list'); // setAttribute('속성', '값') -> 속성 추가하기
+    link.setAttribute('href', 'https://www.codeit.kr'); // 속성 수정하기 
+
+    tomorrow.removeAttribute('href'); // removeAttribute('속성') -> 속성 제거하기 
+    tomorrow.removeAttribute('class');
+
+// 스타일 (html7)
+    const today = document.querySelector('#today');
+    const tomorrow = document.querySelector('#tomorrow');
+
+    today.children[0].style.textDecoration = 'line-through';
+    today.children[0].style.backgroundColor = '#DDDDDD';
+
+    today.children[1].className = 'done'; // css에 .done { } 스타일 만들어놓았을 때 
+
+    console.log(today.classList); // classList는 클래스의 속성값을 유사배열로 다루는 프로퍼티 
+    console.log(today.children[1].classList); 
+
+    const item = tomorrow.children[1];
+    item.classList.add('done'); // tomorrow의 1번 인덱스에 done 클래스가 추가됨 // 여러 클래스를 전달하고 싶다면 쉼표로 구분해서 넣기 (item.classList.add('done', 'other');)
+    item.classList.remove('done'); // add와 같이 쉼표로 여러 개 전달 가능 
+    item.classList.toggle('done'); // toggle은 있으면 제거하고 없으면 추가하는 메소드 (여러 개 전달 x)
+    item.classList.toggle('done', true); // add의 기능만
+    item.classList.toggle('done', false); // remove의 기능만 
+    // 클래스 속성의 값을 통째로 바꿀 때는 className, 클래스 속성의 값을 부분적으로 수정할 때는 classList 활용 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
